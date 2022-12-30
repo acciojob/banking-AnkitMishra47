@@ -23,7 +23,7 @@ public class BankAccount {
             throw new Exception("Account Number can not be generated");
         }
 
-        return null;
+        return str;
     }
 
     static String findNDigitNumsUtil(int n, int sum, char out[],int index)
