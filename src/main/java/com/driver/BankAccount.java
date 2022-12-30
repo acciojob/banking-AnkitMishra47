@@ -5,11 +5,13 @@ public class BankAccount {
     private String name;
     private double balance;
     private double minBalance;
+    public String accountNumber;
 
     public BankAccount(String name, double balance, double minBalance) {
             this.name = name;
             this.balance = balance;
             this.minBalance = minBalance;
+            this.accountNumber = "";
     }
 
     public String generateAccountNumber(int digits, int sum) throws Exception{
@@ -17,63 +19,54 @@ public class BankAccount {
         //Generate account number having given number of 'digits' such that the sum of digits is equal to 'sum'
         //If it is not possible, throw "Account Number can not be generated" exception
 
-        String str = findNDigitNums(digits , sum);
+        findNDigitNums(digits , sum);
+        String str = this.accountNumber;
 
-        if (str == null){
+        if (str == ""){
             throw new Exception("Account Number can not be generated");
         }
-
+        this.accountNumber = "";
         return str;
     }
 
-    static String findNDigitNumsUtil(int n, int sum, char out[],int index)
+    void findNDigitNumsUtil(int n, int sum, char out[],
+                            int index)
     {
         // Base case
         if (index > n || sum < 0)
-            return null;
+            return;
 
-        // If number becomes N-digit
         if (index == n)
         {
-            // if sum of its digits is equal to given sum,
-            // print it
+
             if(sum == 0)
             {
-                out[index] = '\0'   ;
-                return String.valueOf(out);
+                String num = String.valueOf(out);
+                this.accountNumber = num.substring(0 , num.length()-1);
             }
+            return;
         }
 
-        // Traverse through every digit. Note that
-        // here we're considering leading 0's as digits
+
         for (int i = 0; i <= 9; i++)
         {
-            // append current digit to number
             out[index] = (char)(i + '0');
 
-            // recurse for next digit with reduced sum
             findNDigitNumsUtil(n, sum - i, out, index + 1);
         }
-        return null;
     }
 
-    // This is mainly a wrapper over findNDigitNumsUtil.
-    // It explicitly handles leading digit
-    static String findNDigitNums(int n, int sum)
-    {
-        // output array to store N-digit numbers
-        char[] out = new char[n + 1];
 
+    void findNDigitNums(int n, int sum)
+    {
+
+        char[] out = new char[n + 1];
 
         for (int i = 1; i <= 9; i++)
         {
             out[0] = (char)(i + '0');
-            String str = findNDigitNumsUtil(n, sum - i, out, 1);
-            if (str != null){
-                return str;
-            }
+            findNDigitNumsUtil(n, sum - i, out, 1);
         }
-        return null;
     }
 
     public void deposit(double amount) {
